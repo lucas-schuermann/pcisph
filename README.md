@@ -1,4 +1,4 @@
-# PCISPH
+# pcisph
 Predictive-Corrective Smoothed Particle Hydrodynamics Implementation in 2D for CS4167 Final Project
 
 ## Video
