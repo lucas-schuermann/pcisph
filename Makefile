@@ -35,6 +35,7 @@ $(TARGET): $(OBJS)
 	$(LD) $(LFLAGS) $(OBJS) $(LIBS) -o $(TARGET)
 
 obj/main.o: src/main.cpp include/Particle.h
+	mkdir -p obj
 	$(CC) $(CFLAGS) -c src/main.cpp -o obj/main.o
 
 clean:
