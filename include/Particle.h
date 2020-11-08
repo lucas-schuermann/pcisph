@@ -11,8 +11,8 @@ using namespace Eigen;
 class Particle
 {
 public:
-	Particle() : x(0.0f,0.0f), v(0.0f,0.0f), m(PARTICLE_MASS) {}
-	Particle(Vector2d _x) : x(_x), v(0.0f,0.0f), m(PARTICLE_MASS) {}
+	Particle() : x(0.0f, 0.0f), v(0.0f, 0.0f), m(PARTICLE_MASS) {}
+	Particle(Vector2d _x) : x(_x), v(0.0f, 0.0f), m(PARTICLE_MASS) {}
 	// position, velocity, and mass
 	Vector2d x;
 	Vector2d v;
@@ -23,7 +23,7 @@ public:
 	double d;
 	double dv;
 	// next particle in grid cell linked list
-	Particle* n;
+	Particle *n;
 
 	constexpr const static double PARTICLE_MASS = 1.0f;
 };
@@ -32,7 +32,7 @@ struct Neighborhood
 {
 public:
 	Neighborhood() : particles(MAX_NEIGHBORS), r(MAX_NEIGHBORS), numNeighbors(0) {}
-	vector<const Particle*> particles;
+	vector<const Particle *> particles;
 	vector<double> r;
 	int numNeighbors;
 

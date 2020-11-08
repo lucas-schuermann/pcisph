@@ -1,6 +1,5 @@
 #######################################################################################################
 
-
 # Mac OS X
 PCISPH_INCLUDE_PATH      = -I/usr/local/include/
 PCISPH_LIBRARY_PATH      = -L/usr/local/lib/
