@@ -1,7 +1,7 @@
 # pcisph
 Predictive-Corrective smoothed particle hydrodynamics (SPH) implementation in 2D for CS4167 final project
 
-See [here](https://github.com/cerrno/pcisph-rs) for a more recent implementation in Rust
+See [here](https://github.com/cerrno/pcisph-rs) for a more recent implementation in Rust including a parallel solver
 
 For further information, see SPH tutorials on [my website](https://lucasschuermann.com/writing), including an introduction to [SPH math](https://lucasschuermann.com/writing/particle-based-fluid-simulation) and a [simple SPH solver](https://lucasschuermann.com/writing/implementing-sph-in-2d).
 
