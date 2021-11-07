@@ -16,13 +16,13 @@ using namespace std;
 #include "Particle.h"
 
 // rendering projection parameters
-const static int WINDOW_WIDTH = 1280;
-const static int WINDOW_HEIGHT = 800;
-const static double VIEW_WIDTH = 20.0f;
+const static int WINDOW_WIDTH = 800;
+const static int WINDOW_HEIGHT = 600;
+const static double VIEW_WIDTH = 12.5f;
 const static double VIEW_HEIGHT = WINDOW_HEIGHT * VIEW_WIDTH / WINDOW_WIDTH;
 
 // global parameters
-const static int MAX_PARTICLES = 75 * 75;
+const static int MAX_PARTICLES = 50 * 50;
 const static int fps = 40;
 const static Vector2d g(0.0f, -9.81f);
 static vector<Vector3d> boundaries = vector<Vector3d>();
@@ -33,7 +33,7 @@ const static double EPS2 = EPS * EPS;
 const static int SOLVER_STEPS = 10;
 const static double REST_DENSITY = 45.0f; //82.0f;
 const static double STIFFNESS = 0.08f;
-const static double STIFF_APPROX = 0.1f; // LVSTODO: better naming
+const static double STIFF_APPROX = 0.1f;
 const static double SURFACE_TENSION = 0.0001f;
 const static double LINEAR_VISC = 0.25f;
 const static double QUAD_VISC = 0.5f;
@@ -42,7 +42,7 @@ const static double H = 6.0f * PARTICLE_RADIUS; // smoothing radius
 const static double DT = ((1.0f / fps) / SOLVER_STEPS);
 const static double DT2 = DT * DT;
 const static double KERN = 20. / (2. * M_PI * H * H);
-const static double KERN_NORM = 30. / (2. * M_PI * H * H); // LVSTODO: better naming
+const static double KERN_NORM = 30. / (2. * M_PI * H * H);
 
 // global memory allocation
 static int numParticles = MAX_PARTICLES;
@@ -65,10 +65,10 @@ void GridInsert(void);
 
 void InitSPH(void)
 {
-	boundaries.push_back(Vector3d(1, 0, 0));			 // left
-	boundaries.push_back(Vector3d(0, 1, 0));			 // bottom
-	boundaries.push_back(Vector3d(-1, 0, -VIEW_WIDTH));	 // right
-	boundaries.push_back(Vector3d(0, -1, -VIEW_HEIGHT)); // top
+	boundaries.push_back(Vector3d(1, 0, 0));
+	boundaries.push_back(Vector3d(0, 1, 0));
+	boundaries.push_back(Vector3d(-1, 0, -VIEW_WIDTH));
+	boundaries.push_back(Vector3d(0, -1, -VIEW_HEIGHT));
 
 	cout << "grid width: " << GRID_WIDTH << endl;
 	cout << "grid height: " << GRID_HEIGHT << endl;
