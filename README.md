@@ -5,7 +5,7 @@ For further information, please see SPH tutorials on [my website](https://lucass
 ## Running
 ```bash
 # install dependencies (debian/ubuntu)
-apt install libopengl-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev libeigen3-dev
+apt install libopengl-dev freeglut3-dev libeigen3-dev
 
 # uncomment header in `Makefile` depending on platform
 make

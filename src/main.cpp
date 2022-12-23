@@ -1,37 +1,34 @@
+#define GL_SILENCE_DEPRECATION
 #if __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
 #include <GLUT/glut.h>
 #else
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glut.h>
 #endif
 
 #include <iostream>
 #include <vector>
-#include <math.h>
 using namespace std;
 
 #include "Particle.h"
+typedef Matrix<unsigned int, 2, 1> Vector2ui;
 
 // rendering projection parameters
-const static int WINDOW_WIDTH = 800;
-const static int WINDOW_HEIGHT = 600;
+const static unsigned int WINDOW_WIDTH = 800;
+const static unsigned int WINDOW_HEIGHT = 600;
 const static double VIEW_WIDTH = 12.5f;
 const static double VIEW_HEIGHT = WINDOW_HEIGHT * VIEW_WIDTH / WINDOW_WIDTH;
 
 // global parameters
-const static int MAX_PARTICLES = 50 * 50;
-const static int fps = 40;
+const static unsigned int MAX_PARTICLES = 50 * 50;
+const static unsigned int fps = 40;
 const static Vector2d g(0.0f, -9.81f);
 static vector<Vector3d> boundaries = vector<Vector3d>();
 const static double EPS = 0.0000001f;
 const static double EPS2 = EPS * EPS;
 
 // solver parameters
-const static int SOLVER_STEPS = 10;
-const static double REST_DENSITY = 45.0f; //82.0f;
+const static unsigned int SOLVER_STEPS = 10;
+const static double REST_DENSITY = 45.0f; // 82.0f;
 const static double STIFFNESS = 0.08f;
 const static double STIFF_APPROX = 0.1f;
 const static double SURFACE_TENSION = 0.0001f;
@@ -45,7 +42,7 @@ const static double KERN = 20. / (2. * M_PI * H * H);
 const static double KERN_NORM = 30. / (2. * M_PI * H * H);
 
 // global memory allocation
-static int numParticles = MAX_PARTICLES;
+static unsigned int numParticles = MAX_PARTICLES;
 static vector<Particle> particles = vector<Particle>();
 static vector<Neighborhood> nh(numParticles);
 static vector<Vector2d> xlast(numParticles);
@@ -53,9 +50,9 @@ static vector<Vector2d> xprojected(numParticles);
 
 // gridding parameters
 static const double CELL_SIZE = H; // set to smoothing radius
-static const int GRID_WIDTH = (int)(VIEW_WIDTH / CELL_SIZE);
-static const int GRID_HEIGHT = (int)(VIEW_HEIGHT / CELL_SIZE);
-static const int NUM_CELLS = GRID_WIDTH * GRID_HEIGHT;
+static const unsigned int GRID_WIDTH = (unsigned int)(VIEW_WIDTH / CELL_SIZE);
+static const unsigned int GRID_HEIGHT = (unsigned int)(VIEW_HEIGHT / CELL_SIZE);
+static const unsigned int NUM_CELLS = GRID_WIDTH * GRID_HEIGHT;
 
 // gridding memory allocation
 static vector<Particle *> grid(NUM_CELLS);
@@ -77,12 +74,12 @@ void InitSPH(void)
 
 	Vector2d start(0.25f * VIEW_WIDTH, 0.95f * VIEW_HEIGHT);
 	double x0 = start(0);
-	int num = sqrt(numParticles);
+	unsigned int num = sqrt(numParticles);
 	double spacing = PARTICLE_RADIUS;
 	cout << "initializing with " << num << " particles per row for " << num * num << " overall" << endl;
-	for (int i = 0; i < num; i++)
+	for (unsigned int i = 0; i < num; i++)
 	{
-		for (int j = 0; j < num; j++)
+		for (unsigned int j = 0; j < num; j++)
 		{
 			particles.push_back(Particle(start));
 			start(0) += 2.0f * PARTICLE_RADIUS + spacing;
@@ -102,10 +99,10 @@ void GridInsert(void)
 	for (auto &p : particles)
 	{
 		auto i = &p - &particles[0];
-		int xind = p.x(0) / CELL_SIZE;
-		int yind = p.x(1) / CELL_SIZE;
-		xind = std::max(1, std::min(GRID_WIDTH - 2, xind));
-		yind = std::max(1, std::min(GRID_HEIGHT - 2, yind));
+		unsigned int xind = p.x(0) / CELL_SIZE;
+		unsigned int yind = p.x(1) / CELL_SIZE;
+		xind = std::max(1U, std::min(GRID_WIDTH - 2, xind));
+		yind = std::max(1U, std::min(GRID_HEIGHT - 2, yind));
 		p.n = grid[xind + yind * GRID_WIDTH];
 		grid[xind + yind * GRID_WIDTH] = &p;
 		gridIndices[i] = Vector2i(xind, yind);
@@ -120,7 +117,7 @@ void ApplyExternalForces(void)
 
 void Integrate(void)
 {
-	for (int i = 0; i < particles.size(); i++)
+	for (unsigned int i = 0; i < particles.size(); i++)
 	{
 		auto &p = particles[i];
 		xlast[i] = p.x;
@@ -130,17 +127,17 @@ void Integrate(void)
 
 void PressureStep(void)
 {
-	for (int i = 0; i < particles.size(); i++)
+	for (unsigned int i = 0; i < particles.size(); i++)
 	{
 		auto &pi = particles[i];
 
-		Vector2i ind = Vector2i(gridIndices[i](0), gridIndices[i](1) * GRID_WIDTH);
+		Vector2ui ind = Vector2ui(gridIndices[i](0), gridIndices[i](1) * GRID_WIDTH);
 		nh[i].numNeighbors = 0;
 
 		double dens = 0.0f;
 		double dens_proj = 0.0f;
-		for (int ii = ind(0) - 1; ii <= ind(0) + 1; ii++)
-			for (int jj = ind(1) - GRID_WIDTH; jj <= ind(1) + GRID_WIDTH; jj += GRID_WIDTH)
+		for (unsigned int ii = ind(0) - 1; ii <= ind(0) + 1; ii++)
+			for (unsigned int jj = ind(1) - GRID_WIDTH; jj <= ind(1) + GRID_WIDTH; jj += GRID_WIDTH)
 				for (Particle *pgrid = grid[ii + jj]; pgrid != NULL; pgrid = pgrid->n)
 				{
 					const Particle &pj = *pgrid;
@@ -169,12 +166,12 @@ void PressureStep(void)
 
 void Project(void)
 {
-	for (int i = 0; i < particles.size(); i++)
+	for (unsigned int i = 0; i < particles.size(); i++)
 	{
 		auto &pi = particles[i];
 
 		Vector2d xx = pi.x;
-		for (int j = 0; j < nh[i].numNeighbors; j++)
+		for (unsigned int j = 0; j < nh[i].numNeighbors; j++)
 		{
 			const Particle &pj = *nh[i].particles[j];
 			double r = nh[i].r[j];
@@ -208,7 +205,7 @@ void Project(void)
 
 void Correct(void)
 {
-	for (int i = 0; i < particles.size(); i++)
+	for (unsigned int i = 0; i < particles.size(); i++)
 	{
 		auto &p = particles[i];
 		p.x = xprojected[i];
@@ -259,7 +256,7 @@ void PrintPositions(void)
 
 void Update(void)
 {
-	for (int i = 0; i < SOLVER_STEPS; i++)
+	for (unsigned int i = 0; i < SOLVER_STEPS; i++)
 	{
 		ApplyExternalForces();
 		Integrate();

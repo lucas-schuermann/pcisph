@@ -8,12 +8,12 @@ PCISPH_OPENGL_LIBS       = -framework OpenGL -framework GLUT
 # # Linux
 # PCISPH_INCLUDE_PATH      =
 # PCISPH_LIBRARY_PATH      =
-# PCISPH_OPENGL_LIBS       = -lglut -lGL -lGLU -lX11
+# PCISPH_OPENGL_LIBS       = -lglut -lGL -lX11
 
 # # Windows / Cygwin
 # PCISPH_INCLUDE_PATH      = -I/usr/include/opengl
 # PCISPH_LIBRARY_PATH      = -L/usr/lib/w32api
-# PCISPH_OPENGL_LIBS       = -lglut32 -lglu32 -lopengl32
+# PCISPH_OPENGL_LIBS       = -lglut32 -lopengl32
 
 #######################################################################################################
 
